@@ -11,7 +11,7 @@ struct Coord {
 struct Placement {
   int bin;
   Coord coord;
-  int item;
+  Item item;
 };
 
 struct Packing {

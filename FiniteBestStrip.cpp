@@ -14,27 +14,24 @@ Packing FBS(vector <Item> &items, int Hbin, int Wbin) {
   int nbin = 0;
   // leftover width used to fit figure
   int wleft = Wbin;
+  int nItems = items.size();
 
-  list <list <pair <Item, Coord> > > strips;
+  vector <vector <pair<Item, Coord>>> strips;
+
+  // Initialize strips with worst case N strips
+  for(int i = 0; i < nItems; i++) {
+    
+  }
 
   for(int i = 0; i < nItems; i++) {
     if (!items[i].visited) {
-      if items[i].
+      if (items[i].width <= wleft)
+        
+        
     }
-      
+    
               
   }
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   return; 
 }
