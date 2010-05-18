@@ -5,7 +5,8 @@ using namespace std;
 
 // Finite Best Strip
 
-Package FBS(Item &items, int nItems, int Hbin, int Wbin) {
+Packing FBS(vector <Item> &items, int Hbin, int Wbin) {
+
   // Sorting the items by nonincreasing height
   qsort(items, nItems, sizeof(Item), compareHeight);
   
@@ -13,6 +14,19 @@ Package FBS(Item &items, int nItems, int Hbin, int Wbin) {
   int nbin = 0;
   // leftover width used to fit figure
   int wleft = Wbin;
+
+  list <list <pair <Item, Coord> > > strips;
+
+  for(int i = 0; i < nItems; i++) {
+    if (!items[i].visited) {
+      if items[i].
+    }
+      
+              
+  }
+
+  
+  
   
   
   

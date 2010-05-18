@@ -1,7 +1,9 @@
-# Define the symbols we might want to change:
-    CXX	:= g++
-    CXXFLAGS := -g
+CXX	:= g++
+CXXFLAGS := -g
+OBJECTS := 
 
-    OBJECTS := 
-    graph: $(OBJECTS)
+binpacking2D: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(OBJECTS)
+
+clean:
+	rm -rf *.o *.out semantic.cache *.gch *~ *.tex.backup

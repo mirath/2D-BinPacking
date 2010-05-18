@@ -10,16 +10,20 @@ struct Coord {
 
 struct Placement {
   int bin;
-  Coord z;
+  Coord coord;
+  int item;
 };
 
 struct Packing {
-  vector <Placement> p;
+  vector <Placement> packing;
+  int binNum;
 };
 
 struct Item {
   int width;
   int height;
+  int id;
+  bool visited;
 };
 
 #endif
