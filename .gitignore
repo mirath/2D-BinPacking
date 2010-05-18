@@ -1,2 +1,5 @@
 *.o
 main
+semantic.cache
+*.gch
+
