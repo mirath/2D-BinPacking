@@ -2,4 +2,5 @@
 main
 semantic.cache
 *.gch
-
+test*
+~*
