@@ -4,3 +4,4 @@ semantic.cache
 *.gch
 test*
 ~*
+test.cpp
