@@ -3,6 +3,13 @@
 using namespace std;
 #include <vector>
 
+struct Item {
+  int width;
+  int height;
+  int id;
+  bool visited;
+};
+
 struct Coord {
   int x;
   int y;
@@ -18,12 +25,4 @@ struct Packing {
   vector <Placement> packing;
   int binNum;
 };
-
-struct Item {
-  int width;
-  int height;
-  int id;
-  bool visited;
-};
-
 #endif

@@ -13,6 +13,8 @@ int * combinations(int k, int n, int* arr){
 
   if (arr[i] < n-1)
     arr[i] += 1;
+  else if (arr[0] == n-1)
+    return 0;
   else{
     while(arr[i] >= n-1){
       arr[i-1] += 1;
@@ -51,6 +53,25 @@ int searchItem(vector<Placement> vect, int item){
   }
 
   return where;
+}
+
+long factorial(int i){
+  long fac = 1;
+
+  while(i > 1){
+    fac = fac*i;
+    i -=1;
+  }
+
+  return fac;
+}
+
+long comb(int n, int k){
+  long comb;
+
+  comb = factorial(n)/(factorial(n-k)*factorial(k));
+  
+  return comb;
 }
 
 void printPack(Packing p){
