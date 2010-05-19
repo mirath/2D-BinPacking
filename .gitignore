@@ -6,3 +6,4 @@ semantic.cache
 test.cpp
 test.o
 test
+test.h
