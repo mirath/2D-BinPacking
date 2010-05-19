@@ -2,6 +2,7 @@
 main
 semantic.cache
 *.gch
-test*
-~*
+*~
 test.cpp
+test.o
+test
