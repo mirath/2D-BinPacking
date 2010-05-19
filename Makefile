@@ -1,5 +1,5 @@
 CXX	:= g++
-CXXFLAGS := -g
+CXXFLAGS := -g -std=c++0x
 OBJECTS := 
 
 binpacking2D: $(OBJECTS)

@@ -1,7 +1,7 @@
 #ifndef dataStructs
 #define dataStructs
-using namespace std;
 #include <vector>
+using namespace std;
 
 struct Item {
   int width;
@@ -22,7 +22,12 @@ struct Placement {
 };
 
 struct Packing {
-  vector <Placement> packing;
+  vector<Placement> packing;
   int binNum;
+};
+
+struct Strip {
+  vector<Item> strip;
+  bool visited;
 };
 #endif

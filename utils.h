@@ -2,17 +2,27 @@
 //#define utils
 #include "dataStructs.h"
 
-int compareHeight(const void *, const void *);
+//Strip packing
+bool compareHeight(Item, Item);
 
-int * combinations(int,int,int*);
+void init_visited(vector <Item> &);
 
-bool linS(int*,int,int);
+void init_coord(vector <Item> &);
 
+void init_vi_strip(vector <Strip> &);
+
+//HFirstBest
 int searchItem(const vector<Placement>,int);
 
-void printPack(const Packing);
+bool linS(const int*,int,int);
 
 long factorial(int i);
 
 long comb(int n, int k);
+
+int * combinations(int,int,int*);
+
+//Others
+void printPack(const Packing);
+
 //#endif

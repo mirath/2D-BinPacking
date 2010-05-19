@@ -1,7 +1,7 @@
 //#ifndef HFirstBest
 //#define HFirstBest
-#include "utils.h"
 #include "dataStructs.h"
+#include "utils.h"
 #include <iostream>
 #include <vector>
 using namespace std;
