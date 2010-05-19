@@ -12,9 +12,11 @@ void init_visited(vector <Item> &);
 
 void init_vi_strip(vector <Strip> &);
 
+
+//HFirstBest
 int searchItem(const vector<Placement>,int);
 
-bool linS(const int*,int,int);
+bool linS(int*,int,int);
 
 long factorial(int i);
 

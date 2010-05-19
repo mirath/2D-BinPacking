@@ -41,7 +41,7 @@ int searchItem(vector<Placement> vect, int item){
   return where;
 }
 
-bool linS(int* arr, int N, int elem){
+bool linS(int * arr, int N, int elem){
   bool is = false;
   int i = 0;
 

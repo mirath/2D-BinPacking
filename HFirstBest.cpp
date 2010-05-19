@@ -71,6 +71,7 @@ vector<Item>* getItems(int * b, int N, int forbiddenBin, Packing items){
     }
   }
 
+  delete bins;
   return selectedItems;
 }
 
