@@ -1,6 +1,14 @@
 #ifndef dataStructs
 #define dataStructs
 #include <vector>
+using namespace std;
+
+struct Item {
+  int width;
+  int height;
+  int id;
+  bool visited;
+};
 
 struct Coord {
   int x;
@@ -29,5 +37,4 @@ struct Strip {
   vector<Item> strip;
   bool visited;
 };
-
 #endif

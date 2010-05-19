@@ -10,6 +10,7 @@ bool compareHeight(Item a, Item b) {
 
 void init_visited(vector <Item> &items) {
   // Setting all items to not visited
+  int nItems = items.size();
   for(int i = 0; i < nItems; i++) 
     items[i].visited = false;
 }
@@ -27,24 +28,17 @@ void init_vi_strip(vector <Strip> &sset) {
   vector<Item>::iterator it;
 }
 
-int * combinations(int k, int n, int* arr){
-  int i = k-1;
+int searchItem(vector<Placement> vect, int item){
+  int where = -1;
+  int i = 0;
 
-  if (arr[i] < n-1)
-    arr[i] += 1;
-  else{
-    while(arr[i] >= n-1){
-      arr[i-1] += 1;
-      i -= 1;
-    }
-
-    while(i < k-1){
-      arr[i+1] = arr[i]+1;
-      i += 1;
-    }
+  while (i < vect.size()){
+    if (vect[i].item.id == item)
+      where = i;
+    i += 1;
   }
 
-  return arr;
+  return where;
 }
 
 bool linS(int* arr, int N, int elem){
@@ -59,17 +53,43 @@ bool linS(int* arr, int N, int elem){
   return is;
 }
 
-int searchItem(vector<Placement> vect, int item){
-  int where = -1;
-  int i = 0;
+long factorial(int i){
+  long fac = 1;
 
-  while (i < vect.size()){
-    if (vect[i].item.id == item)
-      where = i;
-    i += 1;
+  while(i > 1){
+    fac = fac*i;
+    i -=1;
   }
 
-  return where;
+  return fac;
+}
+
+long comb(int n, int k){
+  long comb;
+  comb = factorial(n)/(factorial(n-k)*factorial(k));
+  return comb;
+}
+
+int * combinations(int k, int n, int* arr){
+  int i = k-1;
+
+  if (arr[i] < n-1)
+    arr[i] += 1;
+  else if (arr[0] == n-1)
+    return 0;
+  else{
+    while(arr[i] >= n-1){
+      arr[i-1] += 1;
+      i -= 1;
+    }
+
+    while(i < k-1){
+      arr[i+1] = arr[i]+1;
+      i += 1;
+    }
+  }
+
+  return arr;
 }
 
 void printPack(Packing p){
