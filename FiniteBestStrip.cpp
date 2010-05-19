@@ -24,7 +24,6 @@ Packing FBS(vector <Item> &items, int Hbin, int Wbin) {
 
   // Structure initialization
   init_visited(items);
-  init_coord(items);
 
   // At least one strip will have to be used
   sset.push_back((Strip){vector<Item>(), false});

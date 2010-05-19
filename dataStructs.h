@@ -15,13 +15,6 @@ struct Coord {
   int y;
 };
 
-struct Item {
-  int width;
-  int height;
-  int id;
-  bool visited;
-};
-
 struct Placement {
   int bin;
   Coord coord;

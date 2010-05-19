@@ -8,7 +8,7 @@ bool compareHeight(Item, Item);
 
 void init_visited(vector <Item> &);
 
-void init_coord(vector <Item> &);
+//void init_coord(vector <Item> &);
 
 void init_vi_strip(vector <Strip> &);
 

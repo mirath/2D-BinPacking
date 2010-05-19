@@ -1,6 +1,8 @@
-CXX	:= g++
-CXXFLAGS := -g -std=c++0x
-OBJECTS := binPacking2D.o FiniteBestStrip.o utils.o
+CXX	:= g++-4.1
+CXXFLAGS := -g 
+OBJECTS := binPacking2D.o FiniteBestStrip.o utils.o HFirstBest.o 
+
+all: binPacking2D
 
 binPacking2D: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(OBJECTS) -o binPacking2D
