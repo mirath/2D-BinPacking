@@ -1,5 +1,5 @@
 #include "dataStructs.h"
 
-int compareHeight(const void *, const void *);
+bool compareHeight(Item, Item);
 
 int * combinations(int,int,int*);

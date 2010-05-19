@@ -1,7 +1,7 @@
 #include "utils.h"
 
-int compareHeight(const void *a, const void *b) {
+bool compareHeight(Item a, Item b) {
   // We add the outer minus sign to get nonincreasing 
   // ordering.
-  return ( -((*(Item *)a).height - (*(Item*)b).height) );
+  return (a.height < b.height);
 }
