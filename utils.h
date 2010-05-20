@@ -13,8 +13,10 @@ void init_visited(vector <Item> &);
 void init_vi_strip(vector <Strip> &);
 
 
-//HFirstBest
+//Heuristics
 int searchItem(const vector<Placement>,int);
+
+int searchBin(const vector<Placement>,int);
 
 bool linS(int*,int,int);
 

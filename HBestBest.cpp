@@ -55,11 +55,14 @@ int HBestBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
     i += 1;
   }
 
-  delete arr;
   if (bestPack->binNum <= k){
-    update(*bestPack,items);
+    update(*bestPack,items,arr,k,Tbin);
+
+    delete arr;
     return bestPack->binNum;
   }
-  else
+  else{
+    delete arr;
     return k+1;
+  }
 }

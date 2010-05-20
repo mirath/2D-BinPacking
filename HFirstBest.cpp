@@ -5,7 +5,7 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
   int n = items->binNum;
   long combs = comb((n-1),k);
   if (combs > 100000)
-    combs = combs* (long) (0.4);
+    combs = (long)combs*(0.4);
   
   //Variables temporales de la heuristica
   Packing pack;
@@ -30,10 +30,9 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
       //Solo si el objeto esta en el "target bin" lo proceso
       itemsToPack = getItems(arr,k,Tbin,items);
       itemsToPack->push_back(items->packing[i].item);
-      pack = _FBS(itemsToPack,Hbin,Wbin,*items);
+      pack = FBS(*itemsToPack,Hbin,Wbin);
       if (pack.binNum <= k){
-	update(pack,items);
-
+	update(pack,items,arr,k,Tbin);
 	delete arr;
 	return pack.binNum;
       }

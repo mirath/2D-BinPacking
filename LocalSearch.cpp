@@ -5,8 +5,9 @@ Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
   int Tbin;
   Packing pack;
   pack = initialPacking(items);
+  pack.binNum = items.size();
 
-  long max_iterations = 100000000; //cien millones
+  long max_iterations = 10000; //diez mil
   long i = 0;
 
   register int k_in = 1;
@@ -39,7 +40,6 @@ Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
     }
     ++i;
   }
-  cout << i <<"\n";
   return pack;
 }
 
@@ -48,9 +48,9 @@ Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
 int targetBin(Packing pack, int Hbin, int Wbin){
   int bin;
   int nbins = pack.binNum;
-  int temp;
+  double temp;
 
-  int min = numeric_limits<int>::min();
+  double min = numeric_limits<double>::max();
   int minBin;
 
   //Filling function
@@ -62,17 +62,18 @@ int targetBin(Packing pack, int Hbin, int Wbin){
     }
   }
 
+  //cout << minBin<<"\n";
   return minBin;
 }
 
-int filling(Packing pack, int bin, int Hbin, int Wbin){
-  int sigmaItems = 0;
-  int sigmaItemsArea = 0;
-  int alpha = 1;
-  int V = Hbin*Wbin;
+double filling(Packing pack, int bin, int Hbin, int Wbin){
+  double sigmaItems = 0;
+  double sigmaItemsArea = 0;
+  double alpha = 1;
+  double V = Hbin*Wbin;
 
   Item* it;
-  int nitems = pack.packing.size();
+  double nitems = pack.packing.size();
   int i;
 
   for(i=0; i<nitems; i++){
@@ -83,6 +84,7 @@ int filling(Packing pack, int bin, int Hbin, int Wbin){
     }
   }
 
+  //cout << sigmaItemsArea/V - sigmaItems/nitems <<"\n";
   return sigmaItemsArea/V - sigmaItems/nitems;
 }
 

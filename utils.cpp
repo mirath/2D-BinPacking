@@ -41,6 +41,19 @@ int searchItem(vector<Placement> vect, int item){
   return where;
 }
 
+int searchBin(vector<Placement> vect, int bin){
+  int where = -1;
+  int i = 0;
+
+  while (i < vect.size()){
+    if (vect[i].bin == bin)
+      where = i;
+    i += 1;
+  }
+
+  return where;
+}
+
 bool linS(int * arr, int N, int elem){
   bool is = false;
   int i = 0;
@@ -66,21 +79,24 @@ long factorial(int i){
 
 long comb(int n, int k){
   long comb;
-  comb = factorial(n)/(factorial(n-k)*factorial(k));
+  comb = factorial(n)/((factorial(n-k)*factorial(k)));
   return comb;
 }
 
 int * combinations(int k, int n, int* arr){
   int i = k-1;
+  int j;
 
   if (arr[i] < n-1)
     arr[i] += 1;
-  else if (arr[0] == n-1)
+  else if (arr[0] == n-k)
     return 0;
   else{
-    while(arr[i] >= n-1){
+    j = 0;
+    while(arr[i] >= n-1-j && i>0){
       arr[i-1] += 1;
       i -= 1;
+      j += 1;
     }
 
     while(i < k-1){
@@ -99,12 +115,12 @@ void printPack(Packing p){
   cout<<p.binNum;
   cout<<"\n";
   
-  // for(i=0;i<p.packing.size();++i){
-  //   cout<<"------------\n";
-  //   cout<<"Item: " << p.packing[i].item.id << "\n";
-  //   cout<<"Bin: " << p.packing[i].bin << "\n";
-  //   cout<<"Coor: " << p.packing[i].coord.x << "," << p.packing[i].coord.y << "\n";
-  //   cout<<"Height: " << p.packing[i].item.height << "\n";
-  //   cout<<"Width: " << p.packing[i].item.width << "\n";
-  // }
+  for(i=0;i<p.packing.size();++i){
+    cout<<"------------\n";
+    cout<<"Item: " << p.packing[i].item.id << "\n";
+    cout<<"Bin: " << p.packing[i].bin << "\n";
+    cout<<"Coor: " << p.packing[i].coord.x << "," << p.packing[i].coord.y << "\n";
+    // cout<<"Height: " << p.packing[i].item.height << "\n";
+    // cout<<"Width: " << p.packing[i].item.width << "\n";
+  }
 }

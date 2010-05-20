@@ -6,6 +6,7 @@ using namespace std;
 #include <istream>
 #include "utils.h"
 #include "FiniteBestStrip.h"
+#include "LocalSearch.h"
 #include "dataStructs.h"
 
 int main(int argc, char *argv[]) {
@@ -40,7 +41,7 @@ int main(int argc, char *argv[]) {
       }
       // Whiteline after reading last Item
       instance.getline(line, 60);
-      result = FBS(items, Hbin, Wbin);
+      result = LocalSearch(items, Hbin, Wbin);
       printPack(result);
       items.clear();
     }
