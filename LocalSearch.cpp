@@ -4,15 +4,46 @@
 Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
   int Tbin;
   Packing pack;
-  pack = initialPacking();
+  pack = initialPacking(items);
 
-  while (parate()){
-    Tbin = targetBin();
-    HFirstBest(Tbin,pack,Hbin,Wbin);
+  long max_iterations = 100000000; //cien millones
+  long i = 0;
+
+  register int k_in = 1;
+  int k_out = 1;
+  register int done = 0;
+  register int useless = 0;
+
+  while (i<max_iterations && done != 4){
+    if (k_in == pack.binNum){
+      if (useless == (k_in-1)){
+    	done += 1;
+      }
+      else{
+    	done = 0;
+      }
+      useless = 0;
+      k_in = 1;
+    }
+    Tbin = targetBin(pack, Hbin, Wbin);
+    k_out = HFirstBest(Tbin,&pack,Hbin,Wbin,k_in);
+    if (k_out > k_in){
+      if (k_in < pack.binNum)
+	k_in += 1;
+      useless += 1;
+    }
+    else{
+      if (k_in != 1)
+	k_in -= 1;
+      useless = 0;
+    }
+    ++i;
   }
+  cout << i <<"\n";
+  return pack;
 }
 
-int filling(Packing pack, int Hbin, int Wbin){
+int targetBin(Packing pack, int Hbin, int Wbin){
   Item* it;
   int sigmaItems = 0;
   int sigmaItemsArea = 0;
@@ -26,6 +57,7 @@ int filling(Packing pack, int Hbin, int Wbin){
   int V = Hbin*Wbin;
   int minBin;
 
+  //Filling function
   for(j=0; j<nbins; j++){
     for(i=0; i<nitems; i++){
       if (pack.packing[i].bin == j){
@@ -44,7 +76,17 @@ int filling(Packing pack, int Hbin, int Wbin){
   return j;
 }
 
-int targetBin(Packagin pack){
-  
+Packing initialPacking(vector<Item> items){
+  Packing pack;
+  Placement p;
+  int i;
+  int N = items.size();
 
+  pack.binNum = N;
+  for(i=0 ; i<N ; ++i){
+    p = (Placement) {i,{0,0},items[i]};
+    pack.packing.push_back(p);
+  }
+
+  return pack;
 }

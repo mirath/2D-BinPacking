@@ -1,15 +1,22 @@
 #include "Heuristics.h"
+#include <limits>
 
-int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
+int HBestBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
   //Parametros de la heuristica
   int n = items->binNum;
   long combs = comb((n-1),k);
   if (combs > 100000)
-    combs = combs* (long) (0.4);
+    combs = combs*(0.4);
   
   //Variables temporales de la heuristica
   Packing pack;
+  Packing* bestPack;
   vector<Item> *itemsToPack;
+  bestPack->binNum = numeric_limits<int>::max();
+  int itemsArea = 0;
+  int binsArea = Hbin*Wbin;
+  int bestBinNum;
+  int binNum;
   
   //Parametros de control
   int i = 0;
@@ -31,12 +38,17 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
       itemsToPack = getItems(arr,k,Tbin,items);
       itemsToPack->push_back(items->packing[i].item);
       pack = _FBS(itemsToPack,Hbin,Wbin,*items);
-      if (pack.binNum <= k){
-	update(pack,items);
+      
+      bestBinNum = bestPack->binNum;
+      binNum = pack.binNum;
 
-	delete arr;
-	return pack.binNum;
+      if (bestBinNum > binNum){
+	bestPack = &pack;
       }
+      else if (bestBinNum == binNum){
+	bestPack = breakTie(bestPack,&pack,Hbin,Wbin);
+      }
+
       combinations(k,(n-1),arr);//Actualizo la combinacion
       j += 1;
     }
@@ -44,5 +56,10 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
   }
 
   delete arr;
-  return k+1;
+  if (bestPack->binNum <= k){
+    update(*bestPack,items);
+    return bestPack->binNum;
+  }
+  else
+    return k+1;
 }
