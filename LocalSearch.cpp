@@ -43,37 +43,46 @@ Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
   return pack;
 }
 
+
+
 int targetBin(Packing pack, int Hbin, int Wbin){
-  Item* it;
-  int sigmaItems = 0;
-  int sigmaItemsArea = 0;
-  int i;
-  int nitems = pack.packing.size();
-  int j;
+  int bin;
   int nbins = pack.binNum;
+  int temp;
 
   int min = numeric_limits<int>::min();
-  int alpha = 1;
-  int V = Hbin*Wbin;
-  int minBin;
 
   //Filling function
-  for(j=0; j<nbins; j++){
-    for(i=0; i<nitems; i++){
-      if (pack.packing[i].bin == j){
-	it = &(pack.packing[i].item);
-	sigmaItems += 1;
-	sigmaItemsArea += (it->width)*(it->height);
-      }
+  for(bin=0; bin<nbins; bin++){
+    temp = filling(pack,bin,Hbin,Wbin);
+    if (min > temp){
+      minBin = bin;
+      min = temp;
     }
-    if (min > sigmaItemsArea/V - sigmaItems/nitems){
-      minBin = j;
-    }
-    sigmaItems = 0;
-    sigmaItemsArea = 0;
   }
 
-  return j;
+  return bin;
+}
+
+int filling(Packing pack, int bin, int Hbin, int Wbin){
+  int sigmaItems = 0;
+  int sigmaItemsArea = 0;
+  int alpha = 1;
+  int V = Hbin*Wbin;
+
+  Item* it;
+  int nitems = pack.packing.size();
+  int i;
+
+  for(i=0; i<nitems; i++){
+    if (pack.packing[i].bin == bin){
+      it = &(pack.packing[i].item);
+      sigmaItems += 1;
+      sigmaItemsArea += (it->width)*(it->height);
+    }
+  }
+
+  return sigmaItemsArea/V - sigmaItems/nitems;
 }
 
 Packing initialPacking(vector<Item> items){
