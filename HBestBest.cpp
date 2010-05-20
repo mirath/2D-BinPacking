@@ -21,6 +21,8 @@ int HBestBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
   int* arr = new int[k]; //combinaciones de bins
   int bestBinNum;
   int binNum;
+
+  int aux;
     
   i=0;
   //Mientras me queden objetos
@@ -33,6 +35,7 @@ int HBestBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
       j = 0;
       //Ciclo a traves de las combinaciones
       while (j < combs){
+	aux = 0;
 	//Solo si el objeto esta en el "target bin" lo proceso
 	itemsToPack = getItems(arr,k,Tbin,items);
 	itemsToPack->push_back(items->packing[i].item);

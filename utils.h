@@ -1,6 +1,7 @@
 //#ifndef utils
 //#define utils
 #include "dataStructs.h"
+#include <list>
 
 //Strip packing
 
@@ -20,11 +21,15 @@ int searchBin(const vector<Placement>,int);
 
 bool linS(int*,int,int);
 
+int linSlist(list<double>,double);
+
 long factorial(int i);
 
 long comb(int n, int k);
 
 int * combinations(int,int,int*);
+
+double nth(list<double>*,int);
 
 //Others
 void printPack(const Packing);

@@ -20,28 +20,30 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
   i=0;
   //Mientras me queden objetos
   while ( i < items->packing.size() ) {
-    //Inicializo las combinaciones de bins
-    for(j=0;j<k;++j){
-      arr[j]=j;
-    }
-    j = 0;
-    //Ciclo a traves de las combinaciones
-    while ((j < combs) && (items->packing[i].bin == Tbin)){
-      //Solo si el objeto esta en el "target bin" lo proceso
-      itemsToPack = getItems(arr,k,Tbin,items);
-      itemsToPack->push_back(items->packing[i].item);
-      pack = FBS(*itemsToPack,Hbin,Wbin);
-      if (pack.binNum <= k){
-	update(pack,items,arr,k,Tbin);
-	delete arr;
-	return pack.binNum;
+    //Solo si el objeto esta en el "target bin" lo proceso
+    if (items->packing[i].bin == Tbin){
+      //Inicializo las combinaciones de bins
+      for(j=0;j<k;++j){
+	arr[j]=j;
       }
-      combinations(k,(n-1),arr);//Actualizo la combinacion
-      j += 1;
+      j = 0;
+      //Ciclo a traves de las combinaciones
+      while (j < combs){
+	itemsToPack = getItems(arr,k,Tbin,items);
+	itemsToPack->push_back(items->packing[i].item);
+	pack = FBS(*itemsToPack,Hbin,Wbin);
+	if (pack.binNum <= k){
+	  update(pack,items,arr,k,Tbin);
+	  delete arr;
+	  return pack.binNum;
+	}
+	combinations(k,(n-1),arr);//Actualizo la combinacion
+	j += 1;
+      }
     }
     i += 1;
   }
-
+  
   delete arr;
   return k+1;
 }

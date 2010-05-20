@@ -1,9 +1,5 @@
 #include "Heuristics.h"
 
-Packing _FBS(vector<Item>* i, int h, int w, Packing items){
-  return items;
-}
-
 vector<Item>* getItems(int * b, int N, int forbiddenBin, Packing* items){
   int * bins = new int[N];
   vector<Item>* selectedItems = new vector<Item>;
@@ -87,7 +83,7 @@ Packing* breakTie(Packing* a, Packing* b, int Hbin, int Wbin){
     itemsAreaB += (it->width)*(it->height);
   }
 
-  if (binsArea-itemsAreaB < binsArea-itemsAreaA)
+  if (binsArea/itemsAreaB < binsArea/itemsAreaA)
     return b;
   else
     return a;

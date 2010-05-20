@@ -54,6 +54,20 @@ int searchBin(vector<Placement> vect, int bin){
   return where;
 }
 
+int linSlist(list<double> lst, double N){
+  int where = -1;
+  list<double>::iterator lstIt;
+  int i = 0;
+
+  for(lstIt=lst.begin(); lstIt != lst.end(); lstIt++){
+    if (*lstIt == N)
+      where = i;
+    i += 1;
+  }
+
+  return where;
+}
+
 bool linS(int * arr, int N, int elem){
   bool is = false;
   int i = 0;
@@ -77,12 +91,27 @@ long factorial(int i){
   return fac;
 }
 
+long factorial_n(int i,int n){
+  long fac = 1;
+
+  while(i >= n){
+    fac = fac*i;
+    i -=1;
+  }
+
+  return fac;
+}
+
 long comb(int n, int k){
   long comb;
-  comb = factorial(n)/((factorial(n-k)*factorial(k)));
+  comb = factorial_n(n,(n-k)+1)/factorial(k);
   return comb;
 }
 
+//Based on the class by:
+//Michael Gilleland, http://www.merriampark.com/comb.htm
+//Based on the algorithm by:
+//Kenneth H. Rosen, Discrete Mathematics and Its Applications, 2nd edition (NY: McGraw-Hill, 1991), pp. 284-286.
 int * combinations(int k, int n, int* arr){
   int i = k-1;
   int j;
@@ -115,12 +144,54 @@ void printPack(Packing p){
   cout<<p.binNum;
   cout<<"\n";
   
-  for(i=0;i<p.packing.size();++i){
-    cout<<"------------\n";
-    cout<<"Item: " << p.packing[i].item.id << "\n";
-    cout<<"Bin: " << p.packing[i].bin << "\n";
-    cout<<"Coor: " << p.packing[i].coord.x << "," << p.packing[i].coord.y << "\n";
+  // for(i=0;i<p.packing.size();++i){
+  //   cout<<"------------\n";
+  //   cout<<"Item: " << p.packing[i].item.id << "\n";
+  //   cout<<"Bin: " << p.packing[i].bin << "\n";
+  //   cout<<"Coor: " << p.packing[i].coord.x << "," << p.packing[i].coord.y << "\n";
     // cout<<"Height: " << p.packing[i].item.height << "\n";
     // cout<<"Width: " << p.packing[i].item.width << "\n";
+  //}
+}
+
+//Credit: Raymond Hettinger, David Eppstein, Shane Holloway, Chris Perkins
+double nth(list<double> *lst, int N){
+
+  list<double>::iterator lstIt;
+  list<double> over;
+  list<double> under;
+
+  double pivot;
+  int pivotCount=0;
+  int numUnder;
+
+  while(true) {
+    lstIt = lst->begin();
+    pivot = *lstIt;
+
+    pivotCount = 0;
+
+    under.clear();
+    over.clear();
+
+    for (lstIt = lst->begin(); lstIt != lst->end(); lstIt++) {
+      if (*lstIt < pivot) {
+	under.push_front(*lstIt);
+      }
+      else if (*lstIt > pivot) {
+	over.push_front(*lstIt);
+      }
+      else
+	pivotCount += 1;
+    }
+    numUnder = under.size();
+    if (N < numUnder)
+      lst = new list<double> (under);
+    else if (N < numUnder + pivotCount)
+      return pivot;
+    else{
+      lst = new list<double> (over);
+      N -= numUnder + pivotCount;
+    }
   }
 }
