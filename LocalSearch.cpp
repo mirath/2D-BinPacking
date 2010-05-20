@@ -51,6 +51,7 @@ int targetBin(Packing pack, int Hbin, int Wbin){
   int temp;
 
   int min = numeric_limits<int>::min();
+  int minBin;
 
   //Filling function
   for(bin=0; bin<nbins; bin++){
@@ -61,7 +62,7 @@ int targetBin(Packing pack, int Hbin, int Wbin){
     }
   }
 
-  return bin;
+  return minBin;
 }
 
 int filling(Packing pack, int bin, int Hbin, int Wbin){
