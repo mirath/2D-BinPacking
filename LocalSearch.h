@@ -1,6 +1,6 @@
 #include "dataStructs.h"
 #include "utils.h"
-#include "HFirstBest.h"
+#include "Heuristics.h"
 #include <iostream>
 #include <vector>
 using namespace std;
