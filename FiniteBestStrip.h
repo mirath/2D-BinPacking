@@ -12,6 +12,11 @@ vector<Placement> putAbove(Strip &, int, int);
 vector<Placement> operator+(vector<Placement>,
                             vector<Placement>);
 
+pair<int, bool> search4others(vector<Item>,int, int,int);
+
+pair<int,bool> search4strips(int,vector<Strip>,int, int,
+                             int);
+
 
 
 

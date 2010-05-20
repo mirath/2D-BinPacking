@@ -94,7 +94,7 @@ Packing initialPacking(vector<Item> items){
 
   pack.binNum = N;
   for(i=0 ; i<N ; ++i){
-    p = {i,{0,0},items[i]};
+    p = (Placement) {i,{0,0},items[i]};
     pack.packing.push_back(p);
   }
 

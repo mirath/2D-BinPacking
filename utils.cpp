@@ -99,12 +99,12 @@ void printPack(Packing p){
   cout<<p.binNum;
   cout<<"\n";
   
-  for(i=0;i<p.packing.size();++i){
-    cout<<"------------\n";
-    cout<<"Item: " << p.packing[i].item.id << "\n";
-    cout<<"Bin: " << p.packing[i].bin << "\n";
-    cout<<"Coor: " << p.packing[i].coord.x << "," << p.packing[i].coord.y << "\n";
-    cout<<"Height: " << p.packing[i].item.height << "\n";
-    cout<<"Width: " << p.packing[i].item.width << "\n";
-  }
+  // for(i=0;i<p.packing.size();++i){
+  //   cout<<"------------\n";
+  //   cout<<"Item: " << p.packing[i].item.id << "\n";
+  //   cout<<"Bin: " << p.packing[i].bin << "\n";
+  //   cout<<"Coor: " << p.packing[i].coord.x << "," << p.packing[i].coord.y << "\n";
+  //   cout<<"Height: " << p.packing[i].item.height << "\n";
+  //   cout<<"Width: " << p.packing[i].item.width << "\n";
+  // }
 }
