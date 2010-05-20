@@ -32,6 +32,8 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
 	itemsToPack = getItems(arr,k,Tbin,items);
 	itemsToPack->push_back(items->packing[i].item);
 	pack = FBS(*itemsToPack,Hbin,Wbin);
+	//Si logre poner todos los objetos en k bins o menos
+	//tomo la solucion
 	if (pack.binNum <= k){
 	  update(pack,items,arr,k,Tbin);
 	  delete arr;
@@ -45,5 +47,8 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
   }
   
   delete arr;
+
+  //Falle en hallar algo mejor, k+1 se asegura que
+  //el valor de retorno sea mayor que el de entrada
   return k+1;
 }
