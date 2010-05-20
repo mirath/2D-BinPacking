@@ -1,6 +1,7 @@
 using namespace std;
 #include <cstdlib>
 #include <utility>
+#include <iostream>
 #include <algorithm>
 #include "utils.h"
 #include "FiniteBestStrip.h"
@@ -10,14 +11,14 @@ using namespace std;
 Packing FBS(vector <Item> &items, int Hbin, int Wbin) {
   
   // Sorting the items by nonincreasing height
-  //  sort(items.begin(), items.end(), compareHeight);
+  sort(items.begin(), items.end(), compareHeight);
 
   // Number of bins used so far
   int nbin = 0;
   // leftover width used to fit figure
   int wleft = Wbin;
   int nItems = items.size();
-
+  
   vector<Strip> sset; // Strip set 
 
   int nstrip = 0; // Number of strips used 
@@ -28,7 +29,6 @@ Packing FBS(vector <Item> &items, int Hbin, int Wbin) {
   // At least one strip will have to be used
   sset.push_back((Strip){vector<Item>(), false});
 
-  bool assig = false;
   for(int i = 0; i < nItems; i++) {
     if (!items[i].visited) {
       if (items[i].width <= wleft) {
@@ -39,27 +39,22 @@ Packing FBS(vector <Item> &items, int Hbin, int Wbin) {
       else {
         // We need to look for other elements 
         // that might fit
-        for(int k = i + 1; k < nItems; k++) {
-          if (!items[k].visited) {
-            if (items[k].width <= wleft) {
-              // We add the item to the strip
-              sset[nstrip].strip.push_back(items[k]);
-              wleft -= items[k].width;
-              items[k].visited = true;
-              assig = true;
-              break;
-            }
-            continue; // We keep on checking til the end
-          }
+        pair<int,bool> search = search4others(items,wleft,
+                                              i, nItems);
+        if (search.second) {  // We found a candidate
+          sset[nstrip].strip.push_back(items[search.first]);
+          wleft -= items[search.first].width;
+          items[search.first].visited = true;
+          i -= 1; // We still need to allocate the ith
+                  // element !.
         }
-        if (!assig) {
+        else {
           // None of the elements fit, so we need 
           // to open up a new strip
           nstrip++;
           sset.push_back((Strip) {vector <Item>(), false});
           sset[nstrip].strip.push_back(items[i]);
-          wleft = Wbin;
-          assig = false;
+          wleft = Wbin - items[i].width;
         }
       }
     }
@@ -74,39 +69,44 @@ Packing merge_strips(vector<Strip> &sset,
 
   int currBin = 0;
   vector<Placement> total; 
-  vector<Strip>::iterator it;
-  it = sset.begin();
-  total = total + genBin(currBin,(*it).strip);
-  int currH = (*it).strip[0].height; 
+
+  // for(int i = 0; i < sset.size(); i++) {
+  //   cout << "strip " << i << endl;
+  //   for(int k = 0; k < sset[i].strip.size(); k++) {
+  //     cout << "id " << sset[i].strip[k].id;
+  //   }
+  // }
+  
+  int setSize = sset.size();
+  int it = 0;
+  total = genBin(currBin,sset[it].strip);
+  int currH = sset[it].strip[0].height; 
   it++;
-  bool assig = false;
-  for(it; it != sset.end(); it++) {
-    if (!(*it).visited) {
+  for(it; it < setSize ; it++) {
+    if (!sset[it].visited) {
     // See if the strip fits
-      if ((*it).strip[0].height + currH <= Hbin) {
+      if (sset[it].strip[0].height + currH <= Hbin) {
         // The strip fits
-        total = total + putAbove(*it, currH, currBin);
-        currH += (*it).strip[0].height;
+        total = total + putAbove(sset[it], currH, currBin);
+        currH += sset[it].strip[0].height;
       }
       else { // We have to check for the others strips
-        vector<Strip>::iterator k;
-        for(k = it; k != sset.end(); it++) {
-          if (!(*k).visited) {
-            if ((*k).strip[0].height + currH <= Hbin) {
-              total = total + putAbove(*k,currH, currBin);
-              currH += (*k).strip[0].height;
-              assig = true;
-              break;
-            }
-            else continue;
-          }
+        pair<int,bool> search;
+        search = search4strips(it + 1, sset, currH, Hbin,
+                               setSize);
+        if (search.second) { // We found a candidate
+          int index = search.first;
+          total = total + 
+            putAbove(sset[index],currH, currBin);
+          currH += sset[index].strip[0].height;
+          sset[index].visited = true;
+          it--; // We still need to allocate the ith strip
         }
-        if (!assig) {
+        else {
           // No choice left, we have to open up a new bin
           currBin++;
-          total = total + genBin(currBin,(*it).strip);
-          currH = (*it).strip[0].height;
-          assig = false;
+          total = total + genBin(currBin,sset[it].strip);
+          currH = sset[it].strip[0].height;
         }
       }
     }
@@ -151,3 +151,37 @@ vector<Placement> operator+(vector<Placement> a,
   return a;
 }
 
+pair<int, bool> search4others(vector<Item> items,
+                              int wleft, int i, int nItems)
+{
+  for(int k = i + 1; k < nItems; k++) {
+    if (!items[k].visited) {
+      if (items[k].width <= wleft) {
+        pair<int, bool> response(k, true);
+        return response;
+      }
+    }
+  }
+  pair<int, bool> none(-1, false);
+  return none;
+}
+
+pair<int,bool> search4strips(int k, vector<Strip> sset,
+                             int currH, int Hbin,
+                             int setSize) {
+  
+  for(k; k < setSize; k++) {
+    if (!sset[k].visited) {
+      if (sset[k].strip[0].height + currH <= Hbin) {
+        pair<int,bool> result;
+        result.first = k;
+        result.second = true;
+        return result;
+      }
+    }
+  }
+  pair<int,bool> none;
+  none.first = -1;
+  none.second = false;
+  return none;
+}

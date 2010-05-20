@@ -12,11 +12,14 @@ int main(int argc, char *argv[]) {
   ifstream instance(argv[1]);
   char * line = (char *) malloc(sizeof(char)*60);
   if (instance.is_open()) {
-    int clase;
-    int nItems;
-    vector<Item> items;
-    int Hbin;
-    int Wbin;
+      int clase;
+      int nItems;
+      vector<Item> items;
+      int Hbin;
+      int Wbin;
+      int width;
+      int height;
+      Packing result;
     while (!instance.eof()) {
       // Problem class 
       instance.getline(line, 60);
@@ -30,8 +33,6 @@ int main(int argc, char *argv[]) {
       instance.getline(line, 60);
       sscanf(line," %d %d", &Hbin, &Wbin);
       // Starting to loop over items
-      int width;
-      int height;
       for(int i = 0; i < nItems; i++) {
         instance.getline(line, 60);
         sscanf(line," %d %d", &height, &width);
@@ -39,10 +40,11 @@ int main(int argc, char *argv[]) {
       }
       // Whiteline after reading last Item
       instance.getline(line, 60);
+      result = FBS(items, Hbin, Wbin);
+      printPack(result);
+      items.clear();
     }
     instance.close();
-    Packing result = FBS(items, Hbin, Wbin);
-    printPack(result);
   }
   else {
     cout << "Error leyendo instacia" << endl;

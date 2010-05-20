@@ -11,7 +11,7 @@ int HFirstBest(int Tbin, Packing items, int Hbin, int Wbin){
   long combs = comb((n-1),k);
   cout<<"combs:"<<combs<<"\n";
   if (combs > 100000)
-    combs = combs*(0.4);
+    combs = combs* (long) (0.4);
   
   //Variables temporales de la heuristica
   Packing pack;
