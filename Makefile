@@ -8,8 +8,8 @@ binPacking2D: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(OBJECTS) -o binPacking2D
 	#rm -rf *.o *.out semantic.cache *.gch *~ *.tex.backup
 
-# test: test.o $(OBJECTS)
-# 	$(CXX) $(CXXFLAGS) test.o FiniteBestStrip.o utils.o HFirstBest.o HBestBest.o LocalSearch.o Heuristics.o -o test
+test: test.o $(OBJECTS)
+	$(CXX) $(CXXFLAGS) test.o FiniteBestStrip.o utils.o HFirstBest.o HBestBest.o LocalSearch.o Heuristics.o -o test
 
 binPacking2D.o: binPacking2D.cpp
 	$(CXX) $(CXXFLAGS) -c binPacking2D.cpp

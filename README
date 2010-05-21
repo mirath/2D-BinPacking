@@ -1,2 +1,7 @@
 Search Techniques for the 2D Bin Packing Problem
 
+Building:
+  make all
+
+Runing
+  ./binPacking2d

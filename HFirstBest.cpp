@@ -5,7 +5,7 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
   int n = items->binNum;
   long combs = comb((n-1),k);
   if (combs > 100000)
-    combs = combs* (long) (0.4);
+    combs = (long)combs*(0.4);
   
   //Variables temporales de la heuristica
   Packing pack;
@@ -20,29 +20,35 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
   i=0;
   //Mientras me queden objetos
   while ( i < items->packing.size() ) {
-    //Inicializo las combinaciones de bins
-    for(j=0;j<k;++j){
-      arr[j]=j;
-    }
-    j = 0;
-    //Ciclo a traves de las combinaciones
-    while ((j < combs) && (items->packing[i].bin == Tbin)){
-      //Solo si el objeto esta en el "target bin" lo proceso
-      itemsToPack = getItems(arr,k,Tbin,items);
-      itemsToPack->push_back(items->packing[i].item);
-      pack = _FBS(itemsToPack,Hbin,Wbin,*items);
-      if (pack.binNum <= k){
-        update(pack,items);
-        
-        delete [] arr;
-        return pack.binNum;
+    //Solo si el objeto esta en el "target bin" lo proceso
+    if (items->packing[i].bin == Tbin){
+      //Inicializo las combinaciones de bins
+      for(j=0;j<k;++j){
+	arr[j]=j;
       }
-      combinations(k,(n-1),arr);//Actualizo la combinacion
-      j += 1;
+      j = 0;
+      //Ciclo a traves de las combinaciones
+      while (j < combs){
+	itemsToPack = getItems(arr,k,Tbin,items);
+	itemsToPack->push_back(items->packing[i].item);
+	pack = FBS(*itemsToPack,Hbin,Wbin);
+	//Si logre poner todos los objetos en k bins o menos
+	//tomo la solucion
+	if (pack.binNum <= k){
+	  update(pack,items,arr,k,Tbin);
+	  delete arr;
+	  return pack.binNum;
+	}
+	combinations(k,(n-1),arr);//Actualizo la combinacion
+	j += 1;
+      }
     }
     i += 1;
   }
+  
+  delete arr;
 
-  delete [] arr;
+  //Falle en hallar algo mejor, k+1 se asegura que
+  //el valor de retorno sea mayor que el de entrada
   return k+1;
 }

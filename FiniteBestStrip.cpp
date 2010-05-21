@@ -8,7 +8,7 @@ using namespace std;
 
 // Finite Best Strip
 
-Packing FBS(vector <Item> &items, int Hbin, int Wbin) {
+Packing FBS(vector <Item> & items, int Hbin, int Wbin) {
   
   // Sorting the items by nonincreasing height
   sort(items.begin(), items.end(), compareHeight);
