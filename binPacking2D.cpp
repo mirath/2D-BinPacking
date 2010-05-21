@@ -14,12 +14,12 @@ int main(int argc, char *argv[]) {
   if (instance.is_open()) {
       int clase;
       int nItems;
-      vector<Item> items;
       int Hbin;
       int Wbin;
       int width;
       int height;
       Packing result;
+      vector<Item> items;
     while (!instance.eof()) {
       // Problem class 
       instance.getline(line, 60);

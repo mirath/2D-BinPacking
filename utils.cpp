@@ -2,10 +2,10 @@
 #include <iostream>
 using namespace std;
 
-bool compareHeight(Item a, Item b) {
+bool compareHeight(const Item &a, const Item &b) {
   // We add the outer minus sign to get nonincreasing 
   // ordering.
-  return (a.height >= b.height);
+  return (a.height > b.height);
 }
 
 void init_visited(vector <Item> &items) {

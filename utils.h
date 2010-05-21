@@ -4,7 +4,7 @@
 
 //Strip packing
 
-bool compareHeight(Item, Item);
+bool compareHeight(const Item &,const Item &);
 
 void init_visited(vector <Item> &);
 
