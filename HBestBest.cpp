@@ -6,7 +6,7 @@ int HBestBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
   int n = items->binNum;
   long combs = comb((n-1),k);
   if (combs > 100000)
-    combs = combs*(0.4);
+    combs = combs* (long) (0.4);
   
   //Variables temporales de la heuristica
   Packing pack;

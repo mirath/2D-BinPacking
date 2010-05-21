@@ -30,4 +30,12 @@ struct Strip {
   vector<Item> strip;
   bool visited;
 };
+
+struct Triple {
+  int binchosen;
+  int penalty;
+  Packing sol;
+};
+
+
 #endif

@@ -1,3 +1,5 @@
+#ifndef FiniteBestStrip
+#define FiniteBestStrip
 using namespace std;
 #include "dataStructs.h"
 
@@ -16,7 +18,7 @@ pair<int, bool> search4others(vector<Item>,int, int,int);
 
 pair<int,bool> search4strips(int,vector<Strip>,int, int,
                              int);
-
+#endif
 
 
 

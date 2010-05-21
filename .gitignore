@@ -8,3 +8,9 @@ test.o
 test
 test.h
 a.out
+*.aux
+*.log
+*.pdf
+*.toc
+*.tex.backup
+*.out

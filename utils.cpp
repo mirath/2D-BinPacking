@@ -108,3 +108,13 @@ void printPack(Packing p){
   //   cout<<"Width: " << p.packing[i].item.width << "\n";
   // }
 }
+
+inline int min(int x, int y) {
+  if (x < y) return x;
+  else return y;
+}
+
+inline int max(int x, int y) {
+  if (x > y) return x;
+  else return y;
+}

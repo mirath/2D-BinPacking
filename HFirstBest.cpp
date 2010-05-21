@@ -32,10 +32,10 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
       itemsToPack->push_back(items->packing[i].item);
       pack = _FBS(itemsToPack,Hbin,Wbin,*items);
       if (pack.binNum <= k){
-	update(pack,items);
-
-	delete arr;
-	return pack.binNum;
+        update(pack,items);
+        
+        delete [] arr;
+        return pack.binNum;
       }
       combinations(k,(n-1),arr);//Actualizo la combinacion
       j += 1;
@@ -43,6 +43,6 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
     i += 1;
   }
 
-  delete arr;
+  delete [] arr;
   return k+1;
 }
