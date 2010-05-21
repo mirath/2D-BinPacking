@@ -1,21 +1,40 @@
 #include "LocalSearch.h"
 #include <limits>
+#include <list>
 
 Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
   int Tbin;
   Packing pack;
+  Packing bestPack;
   pack = initialPacking(items);
+  bestPack = pack;
 
-  long max_iterations = 100000000; //cien millones
+  long max_iterations = 100000; //cien mil
   long i = 0;
 
   register int k_in = 1;
   int k_out = 1;
+
+  //Cuando esto llegue a 4, me salgo.
   register int done = 0;
+
+  //Numero de veces seguidas que no se
+  //se ha logrado mejorar la solucion
   register int useless = 0;
 
+  register int div = 1; //Parametro de diversificacion
+
+  //Ciclo principal
   while (i<max_iterations && done != 4){
+    //Si la vecindad ya es muy grande
     if (k_in == pack.binNum){
+      //Diversifico
+      Tbin = nthFilledBin(pack, Hbin, Wbin, div);
+      if (div == pack.binNum-1)
+	div = 1; 
+      else
+	div += 1;
+
       if (useless == (k_in-1)){
     	done += 1;
       }
@@ -25,55 +44,100 @@ Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
       useless = 0;
       k_in = 1;
     }
-    Tbin = targetBin(pack, Hbin, Wbin);
+    else
+      Tbin = targetBin(pack, Hbin, Wbin);
+
+    //===== para mejor mejor, cambiar HFirsBest por HBestBest ======//
     k_out = HFirstBest(Tbin,&pack,Hbin,Wbin,k_in);
+    //Si la cantidad de bins de salida es mayor a la de entrada
+    //aumento la vecindad
     if (k_out > k_in){
       if (k_in < pack.binNum)
 	k_in += 1;
       useless += 1;
     }
+    //Si la cantidad de bins de salida es menor o igua a la de entrada
+    //la tomo
     else{
+      bestPack = pack; //Actualizo mejor hasta el momento
       if (k_in != 1)
 	k_in -= 1;
       useless = 0;
     }
     ++i;
   }
-  cout << i <<"\n";
-  return pack;
+  return bestPack;
 }
 
-int targetBin(Packing pack, int Hbin, int Wbin){
-  Item* it;
-  int sigmaItems = 0;
-  int sigmaItemsArea = 0;
-  int i;
-  int nitems = pack.packing.size();
-  int j;
-  int nbins = pack.binNum;
 
-  int min = numeric_limits<int>::min();
-  int alpha = 1;
-  int V = Hbin*Wbin;
+
+int targetBin(Packing pack, int Hbin, int Wbin){
+  int bin;
+  int nbins = pack.binNum;
+  double temp;
+
+  double min = numeric_limits<double>::max();
   int minBin;
 
-  //Filling function
-  for(j=0; j<nbins; j++){
-    for(i=0; i<nitems; i++){
-      if (pack.packing[i].bin == j){
-	it = &(pack.packing[i].item);
-	sigmaItems += 1;
-	sigmaItemsArea += (it->width)*(it->height);
-      }
+  //Por cada bin
+  for(bin=0; bin<nbins; bin++){
+    temp = filling(pack,bin,Hbin,Wbin);
+    if (min > temp){
+      minBin = bin;
+      min = temp;
     }
-    if (min > sigmaItemsArea/V - sigmaItems/nitems){
-      minBin = j;
-    }
-    sigmaItems = 0;
-    sigmaItemsArea = 0;
   }
 
-  return j;
+  return minBin;
+}
+
+int nthFilledBin(Packing pack, int Hbin, int Wbin, int N){
+  int bin;
+  int nbins = pack.binNum;
+  list<double> bins;
+
+  //La funcion nthBinFill destruye la lista que recibe
+  list<double> bins_toBeDestroyed;
+
+  double fill;
+  double nthBinFill;
+
+  //Se crea una lista con los filling de los bins
+  for(bin=nbins-1; bin>=0; bin--){
+    fill = filling(pack,bin,Hbin,Wbin);
+    bins.push_front(fill);
+    bins_toBeDestroyed.push_front(fill);
+  }
+
+  //Calculo el valor del nth bin
+  nthBinFill = nth(&bins_toBeDestroyed,N);
+  
+  //Debo buscar el valor del nth bin para devolver
+  //su numero
+  return linSlist(bins,nthBinFill);
+}
+
+double filling(Packing pack, int bin, int Hbin, int Wbin){
+  double sigmaItems = 0;
+  double sigmaItemsArea = 0;
+  double alpha = 3.5;
+  double V = Hbin*Wbin;
+
+  Item* it;
+  double nitems = pack.packing.size();
+  int i;
+
+  //Por cada item
+  for(i=0; i<nitems; i++){
+    //Si el item esta en el bin que se esta procesando
+    if (pack.packing[i].bin == bin){
+      it = &(pack.packing[i].item);
+      sigmaItems += 1;
+      sigmaItemsArea += (it->width)*(it->height);
+    }
+  }
+
+  return sigmaItemsArea/V - sigmaItems/nitems;
 }
 
 Packing initialPacking(vector<Item> items){

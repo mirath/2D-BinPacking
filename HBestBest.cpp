@@ -9,57 +9,67 @@ int HBestBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
     combs = combs*(0.4);
   
   //Variables temporales de la heuristica
-  Packing pack;
-  Packing* bestPack;
+  Packing pack; //Packing actual
+  Packing* bestPack = new Packing;//Mejor packing hasta el momento
   vector<Item> *itemsToPack;
   bestPack->binNum = numeric_limits<int>::max();
-  int itemsArea = 0;
-  int binsArea = Hbin*Wbin;
-  int bestBinNum;
-  int binNum;
   
   //Parametros de control
   int i = 0;
   long j = 0;
   int l = 0;
   int* arr = new int[k]; //combinaciones de bins
-    
+  int bestBinNum;
+  int binNum;
+
   i=0;
   //Mientras me queden objetos
   while ( i < items->packing.size() ) {
-    //Inicializo las combinaciones de bins
-    for(j=0;j<k;++j){
-      arr[j]=j;
-    }
-    j = 0;
-    //Ciclo a traves de las combinaciones
-    while ((j < combs) && (items->packing[i].bin == Tbin)){
-      //Solo si el objeto esta en el "target bin" lo proceso
-      itemsToPack = getItems(arr,k,Tbin,items);
-      itemsToPack->push_back(items->packing[i].item);
-      pack = _FBS(itemsToPack,Hbin,Wbin,*items);
-      
-      bestBinNum = bestPack->binNum;
-      binNum = pack.binNum;
-
-      if (bestBinNum > binNum){
-	bestPack = &pack;
+    //Solo si el objeto esta en el "target bin" lo proceso
+    if (items->packing[i].bin == Tbin){
+      //Inicializo las combinaciones de bins
+      for(j=0;j<k;++j){
+	arr[j]=j;
       }
-      else if (bestBinNum == binNum){
-	bestPack = breakTie(bestPack,&pack,Hbin,Wbin);
-      }
+      j = 0;
+      //Ciclo a traves de las combinaciones
+      while (j < combs){
+	itemsToPack = getItems(arr,k,Tbin,items);
+	itemsToPack->push_back(items->packing[i].item);
+	pack = FBS(*itemsToPack,Hbin,Wbin);
+    
+	bestBinNum = bestPack->binNum;
+	binNum = pack.binNum;
 
-      combinations(k,(n-1),arr);//Actualizo la combinacion
-      j += 1;
+	//Si consegui una mejor solucion la guardo en
+	//bestPack
+	if (bestBinNum > binNum){
+	  bestPack = &pack;
+	}
+	//En caso de emptate, se debe romper el empate
+	else if (bestBinNum == binNum){
+	  bestPack = breakTie(bestPack,&pack,Hbin,Wbin);
+	}
+
+	combinations(k,(n-1),arr);//Actualizo la combinacion
+	j += 1;
+      }
     }
     i += 1;
   }
-
-  delete arr;
+  
+  //Si logre mejorar, devuelvo bestPack
   if (bestPack->binNum <= k){
-    update(*bestPack,items);
+    update(*bestPack,items,arr,k,Tbin);
+
+    delete arr;
     return bestPack->binNum;
   }
-  else
+  else{
+    delete arr;
+
+    //Falle en hallar algo mejor, k+1 se asegura que
+    //el valor de retorno sea mayor que el de 
     return k+1;
+  }
 }

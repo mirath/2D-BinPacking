@@ -1,9 +1,5 @@
 #include "Heuristics.h"
 
-Packing _FBS(vector<Item>* i, int h, int w, Packing items){
-  return items;
-}
-
 vector<Item>* getItems(int * b, int N, int forbiddenBin, Packing* items){
   int * bins = new int[N];
   vector<Item>* selectedItems = new vector<Item>;
@@ -30,18 +26,38 @@ vector<Item>* getItems(int * b, int N, int forbiddenBin, Packing* items){
   return selectedItems;
 }
 
-Packing* update(Packing newPacking, Packing* items){
+Packing* update(Packing newPacking, Packing* items, int * b, int N, int Tbin){
   int i;
   int j;
+
+  int * bins = new int[N];
+  // Debo quitar el Tbin
+  //si quedo seleccionado 
+  for(i=0;i<N;i++){
+    bins[i] = b[i];
+    if (bins[i] >= Tbin)
+      bins[i] += 1;
+  }
 
   //Recorro los items
   for(i=0;i<items->packing.size();++i){
     if ((j=searchItem(newPacking.packing,items->packing[i].item.id)) != -1){
       items->packing[i].coord = newPacking.packing[j].coord;
-      items->packing[i].bin = newPacking.packing[j].bin;
+      items->packing[i].bin = bins[newPacking.packing[j].bin];
     }
   }
 
+  if (searchBin(items->packing,Tbin) == -1){
+    items->binNum -= 1;
+
+    for(i=0;i<items->packing.size();++i){
+      if (items->packing[i].bin > Tbin){
+	items->packing[i].bin -= 1;
+      }
+    }
+  }
+
+  delete bins;
   return items;
 }
 
@@ -67,7 +83,7 @@ Packing* breakTie(Packing* a, Packing* b, int Hbin, int Wbin){
     itemsAreaB += (it->width)*(it->height);
   }
 
-  if (binsArea-itemsAreaB < binsArea-itemsAreaA)
+  if (binsArea/itemsAreaB < binsArea/itemsAreaA)
     return b;
   else
     return a;
