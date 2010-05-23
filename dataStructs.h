@@ -26,6 +26,10 @@ struct Packing {
   int binNum;
 };
 
+struct Bins {
+  vector<vector<Item>> bins;
+};
+
 struct Strip {
   vector<Item> strip;
   bool visited;

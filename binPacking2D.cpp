@@ -1,4 +1,3 @@
-using namespace std;
 #include <iostream>
 #include <fstream>
 #include <cstdio>
@@ -8,19 +7,20 @@ using namespace std;
 #include "FiniteBestStrip.h"
 #include "LocalSearch.h"
 #include "dataStructs.h"
+using namespace std;
 
 int main(int argc, char *argv[]) {
   ifstream instance(argv[1]);
   char * line = (char *) malloc(sizeof(char)*60);
   if (instance.is_open()) {
-      int clase;
-      int nItems;
-      vector<Item> items;
-      int Hbin;
-      int Wbin;
-      int width;
-      int height;
-      Packing result;
+    int clase;
+    int nItems;
+    vector<Item> items;
+    int Hbin;
+    int Wbin;
+    int width;
+    int height;
+    Packing result;
     while (!instance.eof()) {
       // Problem class 
       instance.getline(line, 60);
@@ -42,7 +42,9 @@ int main(int argc, char *argv[]) {
       // Whiteline after reading last Item
       instance.getline(line, 60);
       result = LocalSearch(items, Hbin, Wbin);
+      cout << "Tamano: " << nItems << "\n";
       printPack(result);
+      cout << "==============\n";
       items.clear();
     }
     instance.close();

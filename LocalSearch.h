@@ -18,4 +18,4 @@ int nthFilledBin(Packing,int,int,int);
 double filling(Packing,int,int,int);
 
 //Pone cada item en un bin distinto
-Packing initialPacking(vector<Item>);
+Packing* initialPacking(vector<Item>,Packing*,Bins*);

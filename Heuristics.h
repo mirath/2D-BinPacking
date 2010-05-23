@@ -10,20 +10,18 @@ using namespace std;
 //    - int: bin prohibido
 //OUT: - Vector<Item>: items del Packing que estan
 //                     en los bins del arreglo
-vector<Item>* getItems(int*,int,int,Packing*);
-
+vector<Item>* getItems(int*,int,int,Packing*,Bins*);
 
 //Sincroniza la informacion de los items del
 //segundo packing con los del primero
-Packing * update(Packing,Packing*,int*,int,int);
-
+Packing * update(Packing,Packing*,Bins*,int*,int,int);
 
 //Decide que packing es "mejor" dado que ambos
 //usan el mismo numero de bins
 Packing* breakTie(Packing*,Packing*,int,int);
 
 //Busqueda Primer Mejor
-int HFirstBest(int,Packing*,int,int,int);
+int HFirstBest(int,Packing*,Bins*,int,int,int);
 
 //Busqueda Mejor Mejor
 int HBestBest(int,Packing*,int,int,int);

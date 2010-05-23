@@ -2,14 +2,16 @@
 #include <limits>
 #include <list>
 
+
 Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
   int Tbin;
   Packing pack;
+  Bins bins;
   Packing bestPack;
-  pack = initialPacking(items);
+  initialPacking(items,&pack,&bins);
   bestPack = pack;
 
-  long max_iterations = 100000; //cien mil
+  long max_iterations = 10000; //diez mil
   long i = 0;
 
   register int k_in = 1;
@@ -48,7 +50,7 @@ Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
       Tbin = targetBin(pack, Hbin, Wbin);
 
     //===== para mejor mejor, cambiar HFirsBest por HBestBest ======//
-    k_out = HFirstBest(Tbin,&pack,Hbin,Wbin,k_in);
+    k_out = HFirstBest(Tbin,&pack,&bins,Hbin,Wbin,k_in);
     //Si la cantidad de bins de salida es mayor a la de entrada
     //aumento la vecindad
     if (k_out > k_in){
@@ -66,6 +68,8 @@ Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
     }
     ++i;
   }
+
+  cout << "Iteraciones: " << i << "\n";
   return bestPack;
 }
 
@@ -114,7 +118,9 @@ int nthFilledBin(Packing pack, int Hbin, int Wbin, int N){
   
   //Debo buscar el valor del nth bin para devolver
   //su numero
-  return linSlist(bins,nthBinFill);
+  bin = linSlist(bins,nthBinFill);
+
+  return bin;
 }
 
 double filling(Packing pack, int bin, int Hbin, int Wbin){
@@ -140,16 +146,22 @@ double filling(Packing pack, int bin, int Hbin, int Wbin){
   return sigmaItemsArea/V - sigmaItems/nitems;
 }
 
-Packing initialPacking(vector<Item> items){
-  Packing pack;
+Packing* initialPacking(vector<Item> items, Packing* pack, Bins* bins){
   Placement p;
+  vector<Item> contents;
   int i;
   int N = items.size();
 
-  pack.binNum = N;
+  pack->binNum = N;
+  pack->packing.clear();
+  bins->bins.reserve(N);
   for(i=0 ; i<N ; ++i){
     p = (Placement) {i,{0,0},items[i]};
-    pack.packing.push_back(p);
+    pack->packing.push_back(p);
+
+    contents.push_back(items[i]);
+    bins->bins[i] = contents;
+    contents.clear();
   }
 
   return pack;

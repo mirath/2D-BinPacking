@@ -1,6 +1,6 @@
 #include "Heuristics.h"
 
-int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
+int HFirstBest(int Tbin, Packing* items, Bins* bins, int Hbin, int Wbin, int k){
   //Parametros de la heuristica
   int n = items->binNum;
   long combs = comb((n-1),k);
@@ -29,14 +29,15 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
       j = 0;
       //Ciclo a traves de las combinaciones
       while (j < combs){
-	itemsToPack = getItems(arr,k,Tbin,items);
+	itemsToPack = getItems(arr,k,Tbin,items,bins);
 	itemsToPack->push_back(items->packing[i].item);
 	pack = FBS(*itemsToPack,Hbin,Wbin);
 	//Si logre poner todos los objetos en k bins o menos
 	//tomo la solucion
+	delete itemsToPack;
 	if (pack.binNum <= k){
-	  update(pack,items,arr,k,Tbin);
-	  delete arr;
+	  update(pack,items,bins,arr,k,Tbin);
+	  delete [] arr;
 	  return pack.binNum;
 	}
 	combinations(k,(n-1),arr);//Actualizo la combinacion
@@ -46,7 +47,7 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
     i += 1;
   }
   
-  delete arr;
+  delete [] arr;
 
   //Falle en hallar algo mejor, k+1 se asegura que
   //el valor de retorno sea mayor que el de entrada

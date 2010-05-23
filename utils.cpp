@@ -168,6 +168,8 @@ double nth(list<double> *lst, int N){
   while(true) {
     lstIt = lst->begin();
     pivot = *lstIt;
+    if (pivot != 0)
+      cout << pivot <<"\n";
 
     pivotCount = 0;
 
@@ -185,11 +187,14 @@ double nth(list<double> *lst, int N){
 	pivotCount += 1;
     }
     numUnder = under.size();
-    if (N < numUnder)
+    if (N < numUnder){
+      delete lst;
       lst = new list<double> (under);
+    }
     else if (N < numUnder + pivotCount)
       return pivot;
     else{
+      delete lst;
       lst = new list<double> (over);
       N -= numUnder + pivotCount;
     }
