@@ -8,6 +8,7 @@ using namespace std;
 #include "FiniteBestStrip.h"
 #include "LocalSearch.h"
 #include "dataStructs.h"
+#include "TabuSearch.h"
 
 int main(int argc, char *argv[]) {
   ifstream instance(argv[1]);
@@ -41,9 +42,11 @@ int main(int argc, char *argv[]) {
       }
       // Whiteline after reading last Item
       instance.getline(line, 60);
-      result = LocalSearch(items, Hbin, Wbin);
+      //      result = LocalSearch(items, Hbin, Wbin);
+      result = TabuSearch(items, Wbin, Hbin);
       printPack(result);
       items.clear();
+      //      exit(0);
     }
     instance.close();
   }

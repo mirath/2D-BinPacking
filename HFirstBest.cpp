@@ -5,7 +5,7 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
   int n = items->binNum;
   long combs = comb((n-1),k);
   if (combs > 100000)
-    combs = (long)combs*(0.4);
+    combs = combs* (long) (0.4);
   
   //Variables temporales de la heuristica
   Packing pack;
@@ -24,7 +24,7 @@ int HFirstBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
     if (items->packing[i].bin == Tbin){
       //Inicializo las combinaciones de bins
       for(j=0;j<k;++j){
-	arr[j]=j;
+        arr[j]=j;
       }
       j = 0;
       //Ciclo a traves de las combinaciones

@@ -52,4 +52,6 @@ double nth(list<double>*,int);
 //Others
 void printPack(const Packing);
 
+bool operator==(Coord, Coord);
+
 //#endif
