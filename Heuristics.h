@@ -24,4 +24,4 @@ Packing* breakTie(Packing*,Packing*,int,int);
 int HFirstBest(int,Packing*,Bins*,int,int,int);
 
 //Busqueda Mejor Mejor
-int HBestBest(int,Packing*,int,int,int);
+int HBestBest(int,Packing*,Bins *,int,int,int);

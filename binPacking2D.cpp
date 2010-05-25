@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cstdio>
 #include <string>
+#include "string.h"
 #include <istream>
 #include "utils.h"
 #include "FiniteBestStrip.h"
@@ -46,8 +47,15 @@ int main(int argc, char *argv[]) {
       instance.getline(line, 60);
 
       //time(&time1);
-      ctime1 = clock();
-      result = LocalSearch(items, Hbin, Wbin);
+      ctime1 = clock();	
+      if (strcmp(argv[2], "LFB") == 0) 
+	result = LocalSearch(items, Hbin, Wbin, 0);
+      else if (strcmp(argv[2],"LBB") == 0)
+	result = LocalSearch(items, Hbin, Wbin, 1);
+      else {
+	cout << "Error en pasaje de parámetros" << endl;
+	exit(0);
+      }
       ctime2 = clock();
       //time(&time2);
 
