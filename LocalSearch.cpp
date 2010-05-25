@@ -56,7 +56,7 @@ Packing LocalSearch(vector<Item> items, int Hbin, int Wbin, int which){
       k_out = HBestBest(Tbin,&pack,&bins,Hbin,Wbin,k_in);
     //Si la cantidad de bins de salida es mayor a la de entrada
     //aumento la vecindad
-    if (k_out > k_in){
+    if (k_out > k_in) {
       if (k_in < pack.binNum)
 	k_in += 1;
       useless += 1;

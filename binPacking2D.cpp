@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
 
       //time(&time1);
       ctime1 = clock();	
-      if (strcmp(argv[2], "LBF") == 0) 
+      if (strcmp(argv[2], "LFB") == 0) 
 	result = LocalSearch(items, Hbin, Wbin, 0);
       else if (strcmp(argv[2],"LBB") == 0)
 	result = LocalSearch(items, Hbin, Wbin, 1);
