@@ -29,30 +29,30 @@ int HBestBest(int Tbin, Packing* items,Bins* bins, int Hbin, int Wbin, int k){
     if (items->packing[i].bin == Tbin){
       //Inicializo las combinaciones de bins
       for(j=0;j<k;++j){
-	arr[j]=j;
+        arr[j]=j;
       }
       j = 0;
       //Ciclo a traves de las combinaciones
       while (j < combs){
-	itemsToPack = getItems(arr,k,Tbin,items,bins);
-	itemsToPack->push_back(items->packing[i].item);
-	pack = FBS(*itemsToPack,Hbin,Wbin);
-    
-	bestBinNum = bestPack->binNum;
-	binNum = pack.binNum;
+        itemsToPack = getItems(arr,k,Tbin,items,bins);
+        itemsToPack->push_back(items->packing[i].item);
+        pack = FBS(*itemsToPack,Hbin,Wbin);
+        
+        bestBinNum = bestPack->binNum;
+        binNum = pack.binNum;
 
-	//Si consegui una mejor solucion la guardo en
-	//bestPack
-	if (bestBinNum > binNum){
-	  bestPack = &pack;
-	}
-	//En caso de emptate, se debe romper el empate
-	else if (bestBinNum == binNum){
-	  bestPack = breakTie(bestPack,&pack,Hbin,Wbin);
-	}
-
-	combinations(k,(n-1),arr);//Actualizo la combinacion
-	j += 1;
+        //Si consegui una mejor solucion la guardo en
+        //bestPack
+        if (bestBinNum > binNum){
+          bestPack = &pack;
+        }
+        //En caso de emptate, se debe romper el empate
+        else if (bestBinNum == binNum){
+          bestPack = breakTie(bestPack,&pack,Hbin,Wbin);
+        }
+        
+        combinations(k,(n-1),arr);//Actualizo la combinacion
+        j += 1;
       }
     }
     i += 1;

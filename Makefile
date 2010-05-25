@@ -1,12 +1,12 @@
-CXX	:= g++
-CXXFLAGS := -g -std=c++0x -O0
+CXX	:= g++-4.4
+CXXFLAGS := -std=c++0x -O0
 OBJECTS := binPacking2D.o FiniteBestStrip.o utils.o HFirstBest.o HBestBest.o LocalSearch.o Heuristics.o
 
 all: binPacking2D
 
 binPacking2D: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(OBJECTS) -o binPacking2D
-#	rm -rf *.o *.out semantic.cache *.gch *~ *.tex.backup
+	rm -rf *.o *.out semantic.cache *.gch *~ *.tex.backup
 
 test: test.o $(OBJECTS)
 	$(CXX) $(CXXFLAGS) test.o FiniteBestStrip.o utils.o HFirstBest.o HBestBest.o LocalSearch.o Heuristics.o -o test
