@@ -31,11 +31,11 @@ Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
     //Si la vecindad ya es muy grande
     if (k_in == pack.binNum){
       //Diversifico
-      Tbin = nthFilledBin(pack, Hbin, Wbin, div);
-      if (div == pack.binNum-1)
+      if (div >= pack.binNum-1)
 	div = 1; 
       else
 	div += 1;
+      Tbin = nthFilledBin(pack, &bins, Hbin, Wbin, div);
 
       if (useless == (k_in-1)){
     	done += 1;
@@ -47,7 +47,7 @@ Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
       k_in = 1;
     }
     else
-      Tbin = targetBin(pack, Hbin, Wbin);
+      Tbin = targetBin(pack, &bins, Hbin, Wbin);
 
     //===== para mejor mejor, cambiar HFirsBest por HBestBest ======//
     k_out = HFirstBest(Tbin,&pack,&bins,Hbin,Wbin,k_in);
@@ -75,7 +75,7 @@ Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
 
 
 
-int targetBin(Packing pack, int Hbin, int Wbin){
+int targetBin(Packing pack, Bins* bins, int Hbin, int Wbin){
   int bin;
   int nbins = pack.binNum;
   double temp;
@@ -85,7 +85,7 @@ int targetBin(Packing pack, int Hbin, int Wbin){
 
   //Por cada bin
   for(bin=0; bin<nbins; bin++){
-    temp = filling(pack,bin,Hbin,Wbin);
+    temp = filling(pack,bins,bin,Hbin,Wbin);
     if (min > temp){
       minBin = bin;
       min = temp;
@@ -95,10 +95,10 @@ int targetBin(Packing pack, int Hbin, int Wbin){
   return minBin;
 }
 
-int nthFilledBin(Packing pack, int Hbin, int Wbin, int N){
+int nthFilledBin(Packing pack, Bins* bins, int Hbin, int Wbin, int N){
   int bin;
   int nbins = pack.binNum;
-  list<double> bins;
+  list<double> binsFilling;
 
   //La funcion nthBinFill destruye la lista que recibe
   list<double> bins_toBeDestroyed;
@@ -108,8 +108,8 @@ int nthFilledBin(Packing pack, int Hbin, int Wbin, int N){
 
   //Se crea una lista con los filling de los bins
   for(bin=nbins-1; bin>=0; bin--){
-    fill = filling(pack,bin,Hbin,Wbin);
-    bins.push_front(fill);
+    fill = filling(pack,bins,bin,Hbin,Wbin);
+    binsFilling.push_front(fill);
     bins_toBeDestroyed.push_front(fill);
   }
 
@@ -118,50 +118,71 @@ int nthFilledBin(Packing pack, int Hbin, int Wbin, int N){
   
   //Debo buscar el valor del nth bin para devolver
   //su numero
-  bin = linSlist(bins,nthBinFill);
+  bin = linSlist(binsFilling,nthBinFill);
 
   return bin;
 }
 
-double filling(Packing pack, int bin, int Hbin, int Wbin){
+double filling(Packing pack, Bins* bins, int bin, int Hbin, int Wbin){
   double sigmaItems = 0;
   double sigmaItemsArea = 0;
   double alpha = 3.5;
   double V = Hbin*Wbin;
 
   Item* it;
-  double nitems = pack.packing.size();
+  //double nitems = pack.packing.size();
+  double nitems = bins->bins[bin]->size();
   int i;
 
+  //cout << nitems<<"\n";
+  //cout << "=========\n";
+  //Por cada item
+  // for(i=0; i<nitems; i++){
+  //   //Si el item esta en el bin que se esta procesando
+  //   if (pack.packing[i].bin == bin){
+  //     it = &(pack.packing[i].item);
+  //     cout << it->id <<"\n";
+  //     sigmaItems += 1;
+  //     sigmaItemsArea += (it->width)*(it->height);
+  //   }
+  // }
+
+  // cout << sigmaItemsArea/V - sigmaItems/pack.packing.size() <<"\n"; 
+  // cout << sigmaItemsArea <<"\n";
+  //cout << "---------\n";
+
+  //nitems = bins->bins[bin]->size();
+  //sigmaItemsArea = 0;
   //Por cada item
   for(i=0; i<nitems; i++){
-    //Si el item esta en el bin que se esta procesando
-    if (pack.packing[i].bin == bin){
-      it = &(pack.packing[i].item);
-      sigmaItems += 1;
-      sigmaItemsArea += (it->width)*(it->height);
-    }
+    it = &(bins->bins[bin]->at(i));
+    //sigmaItems += 1;
+    //cout << it->id <<"\n";
+    sigmaItemsArea += (it->width)*(it->height);
   }
 
-  return sigmaItemsArea/V - sigmaItems/nitems;
+  // cout << sigmaItemsArea/V - nitems/pack.packing.size() <<"\n"; 
+  // cout << sigmaItemsArea <<"\n";
+  //cout << "=========\n";
+  return sigmaItemsArea/V - nitems/pack.packing.size();
 }
 
 Packing* initialPacking(vector<Item> items, Packing* pack, Bins* bins){
   Placement p;
-  vector<Item> contents;
+  vector<Item>* contents;
   int i;
   int N = items.size();
 
   pack->binNum = N;
   pack->packing.clear();
-  bins->bins.reserve(N);
+  bins->bins.resize(N);
   for(i=0 ; i<N ; ++i){
+    contents = new vector<Item>;
     p = (Placement) {i,{0,0},items[i]};
     pack->packing.push_back(p);
 
-    contents.push_back(items[i]);
+    contents->push_back(items[i]);
     bins->bins[i] = contents;
-    contents.clear();
   }
 
   return pack;

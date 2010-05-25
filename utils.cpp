@@ -80,6 +80,18 @@ bool linS(int * arr, int N, int elem){
   return is;
 }
 
+bool linS(vector<Item> p, Item elem){
+  bool is = false;
+  int i = 0;
+
+  while (i<p.size()){
+    is = is | p[i].id == elem.id;
+    i += 1;
+  }
+
+  return is;
+}
+
 long factorial(int i){
   long fac = 1;
 
@@ -104,7 +116,14 @@ long factorial_n(int i,int n){
 
 long comb(int n, int k){
   long comb;
-  comb = factorial_n(n,(n-k)+1)/factorial(k);
+  int N = n+1;
+
+  N = N | 1; //Lo hago par si no lo es
+  
+  if (N/2 <= k) 
+    comb = factorial_n(n,k-1)/factorial(n-k+1);
+  else
+    comb = factorial_n(n,(n-k)+1)/factorial(k);
   return comb;
 }
 
@@ -138,7 +157,7 @@ int * combinations(int k, int n, int* arr){
 }
 
 void printPack(Packing p){
-  int i = 0;
+  int i;
 
   cout<<"Total bins: ";
   cout<<p.binNum;
@@ -149,13 +168,42 @@ void printPack(Packing p){
   //   cout<<"Item: " << p.packing[i].item.id << "\n";
   //   cout<<"Bin: " << p.packing[i].bin << "\n";
   //   cout<<"Coor: " << p.packing[i].coord.x << "," << p.packing[i].coord.y << "\n";
-    // cout<<"Height: " << p.packing[i].item.height << "\n";
-    // cout<<"Width: " << p.packing[i].item.width << "\n";
-  //}
+  //   cout<<"Height: " << p.packing[i].item.height << "\n";
+  //   cout<<"Width: " << p.packing[i].item.width << "\n";
+  // }
+}
+
+void printBins(Bins* b){
+  int i;
+  int j;
+
+  for(i=0;i<b->bins.size();++i){
+    for (j=0;j<b->bins[i]->size();++j){
+      cout<<"------------\n";
+      cout<<"Bin: " << i << "\n";
+      cout<<"Item: " << b->bins[i]->at(j).id << "\n";
+      cout<<"Height: " << b->bins[i]->at(j).height << "\n";
+      cout<<"Width: " << b->bins[i]->at(j).width << "\n";
+    }
+  }
+}
+
+bool checkState(Packing* p, Bins* b){
+  int i;
+
+  for(i=0;i<p->packing.size();++i)
+    if (! linS(*(b->bins[p->packing[i].bin]),p->packing[i].item) )
+      return false;
+    
+  return true;
 }
 
 //Credit: Raymond Hettinger, David Eppstein, Shane Holloway, Chris Perkins
 double nth(list<double> *lst, int N){
+  if (lst->size() == N){
+    cout << "fuuuuuuuuuck nthhhhhhhh\n";
+    cout << N << "\n";
+  }
 
   list<double>::iterator lstIt;
   list<double> over;
@@ -167,9 +215,12 @@ double nth(list<double> *lst, int N){
 
   while(true) {
     lstIt = lst->begin();
+    //if (lstIt == lst->end())
+    //  cout << "empty list\n";
+
     pivot = *lstIt;
-    if (pivot != 0)
-      cout << pivot <<"\n";
+    // if (pivot != 0)
+    //   cout << pivot <<"\n";
 
     pivotCount = 0;
 
@@ -188,13 +239,13 @@ double nth(list<double> *lst, int N){
     }
     numUnder = under.size();
     if (N < numUnder){
-      delete lst;
+      //delete lst;
       lst = new list<double> (under);
     }
     else if (N < numUnder + pivotCount)
       return pivot;
-    else{
-      delete lst;
+    else {
+      //delete lst;
       lst = new list<double> (over);
       N -= numUnder + pivotCount;
     }

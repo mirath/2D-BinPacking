@@ -27,7 +27,7 @@ struct Packing {
 };
 
 struct Bins {
-  vector<vector<Item>> bins;
+  vector<vector<Item>*> bins;
 };
 
 struct Strip {

@@ -26,6 +26,7 @@ int searchBin(const vector<Placement>,int);
 
 //Busqueda lineal
 bool linS(int*,int,int);
+bool linS(vector<Item>,Item);
 
 //Devuelve la posicion de un double en
 //una lista de double
@@ -51,5 +52,7 @@ double nth(list<double>*,int);
 
 //Others
 void printPack(const Packing);
+void printBins(Bins*);
+bool checkState(Packing*,Bins*);
 
 //#endif
