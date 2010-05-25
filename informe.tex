@@ -40,11 +40,19 @@
 
 \section{Breve descripción del problema}
 
-En teoría de complejidad computacional, el ``Bin Packing Problem'' es un problema combinatorio de dificultad NP-HARD. Consiste en tomar 
-objetos de volúmenes distintos y empacarlos en un número finito de contenedores de capacidad V de tal manera que se minimice el número 
-de contenedores usados. Existen muchas variaciones a este problema, como el de 2-dimensiones, empaquetamieno lineal, por peso, por costo, etc.
-Estos tienen muchas aplicaciones, como por ejemplo llenar containers con fines de exportación, llenar camion es con una capacidad determinada 
-de peso, crear respaldos de archivos en medios portátiles (pendrives, disco duro portátil, etc). 
+En teoría de complejidad computacional, el ``Bin Packing Problem'' es un problema combinatorio de dificultad NP-HARD. Se tienen objetos que
+tienen asignados un costo C e infinitos contenedores idénticos con capacidad V, el problema consiste en colocar los objetos dentro de la
+mínima cantidad posible.\\
+\indent Existen muchas variaciones de este problema, éstas difieren, básicamente, en las dimensiones con las que se trabaja.
+Entre las versiones existentes tenemos 1D, 2D, Strip Packing, Cutting Stock y 3D. Estas tienen muchas aplicaciones, como por ejemplo llenar
+containers con fines de exportación, llenar camión es con una capacidad determinada de peso, crear respaldos de archivos en medios portátiles
+(pendrives, disco duro portátil, etc), encontrar el orden de ejecución que menos tarde para programas que comparten memoria. Nosotros, 
+particularmente, abordaremos la variación 2D.\\ 
+\indent La variación de 2-dimensiones trata de colocar rectangulos(objetos) dentro de rectangulos más grandes(contenedores). Tiene aplicaciones en la 
+industria metalúrgica, maderera, papelera...básicamente, en cualquier industria donde se necesite cortar rectángulos de tamaño estándar en varios pedazos.
+También se aplica a la industria de imprenta, para encajar artículos de periódicos o revistas en la mínima cantidad de hojas posible.\\
+\indent En nuestro caso nos concentramos en una variación específica de 2D, que prohibe que los objetos se roten y exige que los 'cortes' se puedan
+hacer con una serie de cortes que van de un extremo a otro del bin (requisito clásico para industrias como la papelera).
 
 \subsection{Especificación formal}
 
@@ -83,13 +91,143 @@ si cambiamos de solución o no.
 \section{Pseudocódigos}
 
 \subsection{Heurística Finite Best Strip}
-
 Este algoritmo consiste en ir poniendo objetos en la zona inferior izquierda del contenedor. Se comienza con el primero y se prosigue con 
 el resto hasta agotar el ancho del contenedor. Al agotar el ancho del bin hemos conseguido lo que se denomina un "strip`` o también conocido 
 como una capa y se procede a crear un nuevo strip para colocar el resto de los elementos. Cuando se han colocado todos los elementos 
-se procede entonces a tratar de colocar strips encima de otros siempre que quepan en un bin. El algoritmo funciona como sigue:
+se procede entonces a tratar de colocar strips encima de otros siempre que quepan en un bin.
 
+\subsection{Búsqueda Local}
+\begin{verbatim}
+LocalSearch(Items I, int Hbin, int Wbin)                                                                                 
+  int targetBin                                                                                                                                  
+  Packing pack                                                                                                                                               
+  Packing bestPack                                                                                                                                          
+  pack = initialSolution(I)                                                                                                                         
+  bestPack = pack                                                                                                                                           
+                                                                                                                                                             
+  long max_iterations = 10000 //diez mil
+  int terminationLimit = 4
+  int iterations = 0
 
+  int bins_in = 1
+  int bins_out
 
+  int done//Parámetro de terminación
+  int div //Parámetro de diversificación
+
+  //Ciclo principal
+  while (iterations < max_iterations && done < terminationLimit){
+    //Si la vecindad ya es muy grande
+    if (bins_in == pack.total_bins){
+      
+      div = newDiv(pack,div) //Actualizo parámetro de diversificación
+      done = newDone(pack,div) //Actualizo parámetro de terminación
+      bins_in = 1 //Reduzco vecindad  
+
+      targetBin = diversify(pack,div) //Diversifico
+    }
+    else
+      targetBin = targetBin(pack)
+
+    bins_out = Method(targetBin,pack,Hbin,Wbin,bins_in)
+    //Method puede ser FirstBest o BestBest
+
+    if (bins_out > bins_in){
+      bins_in = max(pack.total_bins,bins_in+1) //Aumento vecindad
+    }
+    else{ 
+      bestPack = pack //Actualizo solución
+      bins_in = min(1,bins_in-1) //Reduzco vecindad
+    }
+    ++iterations
+  }
+  return bestPack
+}
+\end{verbatim}
+
+\subsubsection{Method: FirstBest}
+\begin{verbatim}
+int FirstBest(int targetBin, Packing pack, int Hbin, int Wbin, int bins_in){
+  for (item IN pack) {
+    if (item IS IN targenBin){
+      for (comb IN every combination of bins that
+                   does not include the targetBin){
+
+        //Tomo los items de la combinacion
+        itemsToPack = getItems(comb,targetBin,items)
+
+        //Incluyo el item que se 'sacó' del targetBin
+        itemsToPack = itemsToPack + item
+
+        temp_pack = FBS(itemsToPack) //Los empaco
+
+        //Si logre poner todos los objetos en k bins o menos,
+        //es que quite el objeto del targetBin
+        if (temp_pack.total_bins <= bins_in){
+          pack = merge(pack,temp_pack)
+          return pack
+        }
+      }
+    }
+  }
+
+  //Fallé en encontrar algo mejor, retorno infinito
+  return INF
+}
+\end{verbatim}
+
+\subsubsection{Method: BestBest}
+\begin{verbatim}
+int BestBest(int targetBin, Packing pack, int Hbin, int Wbin, int bins_in){
+  Packing bestPack
+  bestPack.total_bins = INF
+
+  for (item IN pack) {
+    if (item IS IN targenBin){
+      for (comb IN every combination of bins that
+                   does not include the targetBin){
+
+        //Tomo los items de la combinacion
+        itemsToPack = getItems(comb,targetBin,items)
+
+        //Incluyo el item que se 'sacó' del targetBin
+        itemsToPack = itemsToPack + item
+
+        temp_pack = FBS(itemsToPack) //Los empaco
+
+        if (temp_pack.total_bins < bestPack.total_bins){
+          bestPack = temp_pack
+        }
+        else if (temp_pack.total_bins == bestPack.total_bins){
+          bestPack = breakTie(temp_pack,bestPack)
+        }
+      }
+    }
+  }
+
+  if(bestPack.total_bins <= bins_in)
+    return bestPack
+  else
+    return INF
+}
+\end{verbatim}
+
+\section{Instancias}
+Se usaron instancias propuestas por Berkey y Wang. En particular, se usaron
+las instancias de clase I para 20 objetos y las de clase II para 40 objetos.\\
+Vamos a presentar ahora la descripción de las intancias usadas, pero antes introduciremos
+ciertas notaciones:\\
+\begin{itemize}
+ \item wj y hj: representan las dimensiones de los objetos individuales
+ \item W y H: representan las dimensiones de los contenedores infinitos e iguales
+\end{itemize}
+Las instancias usadas son, entonces, las siguientes:
+\begin{itemize}
+ \item Clase I: wj y hj uniformemente distribuidas en [1,10], W = H = 10
+ \item Clase I: wj y hj uniformemente distribuidas en [1,10], W = H = 30
+\end{itemize}
+
+\section{Valores iniciales}
+El valor inicial utilizado fué el de un objeto por contenedor.
 \end{document}
 
