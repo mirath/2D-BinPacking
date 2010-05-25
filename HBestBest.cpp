@@ -1,7 +1,7 @@
 #include "Heuristics.h"
 #include <limits>
 
-int HBestBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
+int HBestBest(int Tbin, Packing* items,Bins* bins, int Hbin, int Wbin, int k){
   //Parametros de la heuristica
   int n = items->binNum;
   long combs = comb((n-1),k);
@@ -34,7 +34,7 @@ int HBestBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
       j = 0;
       //Ciclo a traves de las combinaciones
       while (j < combs){
-	//itemsToPack = getItems(arr,k,Tbin,items);
+	itemsToPack = getItems(arr,k,Tbin,items,bins);
 	itemsToPack->push_back(items->packing[i].item);
 	pack = FBS(*itemsToPack,Hbin,Wbin);
     
@@ -60,7 +60,7 @@ int HBestBest(int Tbin, Packing* items, int Hbin, int Wbin, int k){
   
   //Si logre mejorar, devuelvo bestPack
   if (bestPack->binNum <= k){
-    //update(*bestPack,items,arr,k,Tbin);
+    update(*bestPack,items,bins,arr,k,Tbin);
 
     delete arr;
     return bestPack->binNum;

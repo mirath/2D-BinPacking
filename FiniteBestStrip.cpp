@@ -40,7 +40,7 @@ Packing FBS(vector <Item> & items, int Hbin, int Wbin) {
         // We need to look for other elements 
         // that might fit
         pair<int,bool> search = search4others(items,wleft,
-                                              i, nItems);
+                                              i,nItems);
         if (search.second) {  // We found a candidate
           sset[nstrip].strip.push_back(items[search.first]);
           wleft -= items[search.first].width;
@@ -60,54 +60,56 @@ Packing FBS(vector <Item> & items, int Hbin, int Wbin) {
     }
   }
 
-  Packing result = merge_strips(sset, Hbin, Wbin);
+  Packing result = merge_strips(&sset, Hbin, Wbin);
   return result;
 }
 
-Packing merge_strips(vector<Strip> &sset, 
+Packing merge_strips(vector<Strip>* sset, 
                      int Hbin, int Wbin) {
 
   int currBin = 0;
-  vector<Placement> total; 
+  vector<Placement> total;
 
   // for(int i = 0; i < sset.size(); i++) {
   //   cout << "strip " << i << endl;
-  //   for(int k = 0; k < sset[i].strip.size(); k++) {
-  //     cout << "id " << sset[i].strip[k].id;
+  //   for(int k = 0; k < sset->at(i).strip.size(); k++) {
+  //     cout << "id " << sset->at(i).strip[k].id;
   //   }
   // }
   
-  int setSize = sset.size();
+  int setSize = sset->size();
+  total.reserve(setSize);
   int it = 0;
-  total = genBin(currBin,sset[it].strip);
-  int currH = sset[it].strip[0].height; 
+  genBin(currBin,&(sset->at(it).strip),&total);
+  int currH = sset->at(it).strip[0].height; 
   it++;
   for(it; it < setSize ; it++) {
-    if (!sset[it].visited) {
+    if (!sset->at(it).visited) {
     // See if the strip fits
-      if (sset[it].strip[0].height + currH <= Hbin) {
-        // The strip fits
-        total = total + putAbove(sset[it], currH, currBin);
-        currH += sset[it].strip[0].height;
-      }
-      else { // We have to check for the others strips
+      if (sset->at(it).strip[0].height + currH > Hbin) {
         pair<int,bool> search;
-        search = search4strips(it + 1, sset, currH, Hbin,
-                               setSize);
-        if (search.second) { // We found a candidate
-          int index = search.first;
-          total = total + 
-            putAbove(sset[index],currH, currBin);
-          currH += sset[index].strip[0].height;
-          sset[index].visited = true;
-          it--; // We still need to allocate the ith strip
-        }
-        else {
+        search = search4strips(it + 1, sset, currH, Hbin,setSize);
+        if (! search.second) { // We found a candidate
           // No choice left, we have to open up a new bin
           currBin++;
-          total = total + genBin(currBin,sset[it].strip);
-          currH = sset[it].strip[0].height;
+          //total = total + genBin(currBin,&(sset->at(it).strip));
+	  genBin(currBin,&(sset->at(it).strip),&total);
+          currH = sset->at(it).strip[0].height;
         }
+        else {
+          int index = search.first;
+          //total = total + 
+	  putAbove(sset->at(index),currH, currBin, &total);
+          currH += sset->at(index).strip[0].height;
+          sset->at(index).visited = true;
+          it--; // We still need to allocate the ith strip
+        }
+      }
+      else { // We have to check for the others strips
+        // The strip fits
+        //total = total + putAbove(sset->at(it), currH, currBin);
+	putAbove(sset->at(it), currH, currBin, &total);
+        currH += sset->at(it).strip[0].height;
       }
     }
   }
@@ -115,29 +117,29 @@ Packing merge_strips(vector<Strip> &sset,
   return result;
 }
 
-vector<Placement> genBin(int newBin, vector <Item> bottom) {
+vector<Placement>* genBin(int newBin, vector <Item>* bottom, vector<Placement>* total) {
 
-  vector<Placement> result;
+  //vector<Placement> result;
   // Accumulated width
   int wacc = 0;
   vector<Item>::iterator it;
-  for(it = bottom.begin(); it != bottom.end(); it++) {
-    result.push_back((Placement) {newBin, {wacc ,0}, *it});
-    wacc +=  (*it).width;
+  for(it = bottom->begin(); it != bottom->end(); it++) {
+    total->push_back((Placement) {newBin, {wacc ,0}, *it});
+    wacc += (*it).width;
   }
-  return result;
+  return total;
 }
 
-vector<Placement> putAbove(Strip &s, int currH, 
-                           int currBin) {
+vector<Placement>* putAbove(Strip &s, int currH, 
+                           int currBin, vector<Placement>* total) {
   vector<Item>::iterator it;
   vector<Placement> result;
   int wacc = 0; // Accumulated width
   for(it = s.strip.begin(); it != s.strip.end(); it++) {
-    result.push_back((Placement) {currBin, {wacc, currH}, *it});
+    total->push_back((Placement) {currBin, {wacc, currH}, *it});
     wacc += (*it).width;
   }
-  return result;
+  return total;
 }
 
 // Merges two Placement vectors.
@@ -166,13 +168,13 @@ pair<int, bool> search4others(vector<Item> items,
   return none;
 }
 
-pair<int,bool> search4strips(int k, vector<Strip> sset,
+pair<int,bool> search4strips(int k, vector<Strip>* sset,
                              int currH, int Hbin,
                              int setSize) {
   
   for(k; k < setSize; k++) {
-    if (!sset[k].visited) {
-      if (sset[k].strip[0].height + currH <= Hbin) {
+    if (!sset->at(k).visited) {
+      if (sset->at(k).strip[0].height + currH <= Hbin) {
         pair<int,bool> result;
         result.first = k;
         result.second = true;

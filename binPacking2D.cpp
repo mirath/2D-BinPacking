@@ -7,6 +7,7 @@
 #include "FiniteBestStrip.h"
 #include "LocalSearch.h"
 #include "dataStructs.h"
+#include "time.h"
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -21,6 +22,8 @@ int main(int argc, char *argv[]) {
     int width;
     int height;
     Packing result;
+    time_t time1, time2;
+    clock_t ctime1, ctime2;
     while (!instance.eof()) {
       // Problem class 
       instance.getline(line, 60);
@@ -41,9 +44,16 @@ int main(int argc, char *argv[]) {
       }
       // Whiteline after reading last Item
       instance.getline(line, 60);
+
+      //time(&time1);
+      ctime1 = clock();
       result = LocalSearch(items, Hbin, Wbin);
+      ctime2 = clock();
+      //time(&time2);
+
       cout << "Tamano: " << nItems << "\n";
       printPack(result);
+      cout << "Tiempo: "<< (double)(ctime2-ctime1)/((CLOCKS_PER_SEC)*1000)/*((double)difftime(time2,time1))*/ <<"\n";      
       cout << "==============\n";
       items.clear();
     }
