@@ -5,7 +5,7 @@
 #include <vector>
 using namespace std;
 
-Packing LocalSearch(vector<Item>,int,int);
+Packing LocalSearch(vector<Item>,int,int, int);
 
 //Devueve el bin que minimiza la filling function
 int targetBin(Packing,Bins*,int,int);

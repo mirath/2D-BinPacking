@@ -3,7 +3,7 @@
 #include <list>
 
 
-Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
+Packing LocalSearch(vector<Item> items, int Hbin, int Wbin, int which){
   int Tbin;
   Packing pack;
   Bins bins;
@@ -50,7 +50,10 @@ Packing LocalSearch(vector<Item> items, int Hbin, int Wbin){
       Tbin = targetBin(pack, &bins, Hbin, Wbin);
 
     //===== para mejor mejor, cambiar HFirsBest por HBestBest ======//
-    k_out = HFirstBest(Tbin,&pack,&bins,Hbin,Wbin,k_in);
+    if (which == 0) 
+      k_out = HFirstBest(Tbin,&pack,&bins,Hbin,Wbin,k_in);
+    else 
+      k_out = HBestBest(Tbin,&pack,&bins,Hbin,Wbin,k_in);
     //Si la cantidad de bins de salida es mayor a la de entrada
     //aumento la vecindad
     if (k_out > k_in){
